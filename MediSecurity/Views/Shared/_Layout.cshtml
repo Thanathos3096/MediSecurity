@@ -34,7 +34,11 @@
                     <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
                     <li><a asp-area="" asp-controller="Hospitals" asp-action="Index">Hospital</a></li>
-                    <li><a asp-area="" asp-controller="Patients" asp-action="Index">Patient</a></li>
+                    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                    {
+                        <li><a asp-area="" asp-controller="Patients" asp-action="Index">Patient</a></li>
+                    }
+                   
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     @if (User.Identity.IsAuthenticated)

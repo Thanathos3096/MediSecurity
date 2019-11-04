@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using MediSecurity.Data;
+using MediSecurity.Data.Entities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using MediSecurity.Data;
-using MediSecurity.Data.Entities;
 
 namespace MediSecurity.Controllers
 {
+    [Authorize(Roles ="Admin")]
     public class PatientsController : Controller
     {
         private readonly DataContext _dataContext;
@@ -22,9 +21,9 @@ namespace MediSecurity.Controllers
         // GET: Patients
         public IActionResult Index()
         {
-            return View( _dataContext.Patients
-                .Include(p=>p.User)
-                .Include(p=>p.MedicalOrders));
+            return View(_dataContext.Patients
+                .Include(p => p.User)
+                .Include(p => p.MedicalOrders));
         }
 
         // GET: Patients/Details/5

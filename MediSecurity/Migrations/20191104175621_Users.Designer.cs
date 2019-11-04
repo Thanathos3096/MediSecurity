@@ -4,14 +4,16 @@ using MediSecurity.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MediSecurity.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20191104175621_Users")]
+    partial class Users
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -354,14 +356,14 @@ namespace MediSecurity.Migrations
             modelBuilder.Entity("MediSecurity.Data.Entities.Admin", b =>
                 {
                     b.HasOne("MediSecurity.Data.Entities.User", "User")
-                        .WithMany("Admins")
+                        .WithMany()
                         .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("MediSecurity.Data.Entities.Doctor", b =>
                 {
                     b.HasOne("MediSecurity.Data.Entities.User", "User")
-                        .WithMany("Doctors")
+                        .WithMany()
                         .HasForeignKey("UserId");
                 });
 
@@ -397,7 +399,7 @@ namespace MediSecurity.Migrations
             modelBuilder.Entity("MediSecurity.Data.Entities.Patient", b =>
                 {
                     b.HasOne("MediSecurity.Data.Entities.User", "User")
-                        .WithMany("Patients")
+                        .WithMany()
                         .HasForeignKey("UserId");
                 });
 

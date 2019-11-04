@@ -29,6 +29,11 @@ namespace MediSecurity.Data.Entities
 
         [Display(Name = "Has Parking Lot?")]
         public bool HasParkingLot { get; set; }
+        public HospitalType HospitalType { get; set; }
+
+        public ICollection<ImageHospital> ImageHospitals { get; set; }
+
+        public ICollection<MedicalOrder> MedicalOrders { get; set; }
 
     }
 }

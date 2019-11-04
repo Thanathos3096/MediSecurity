@@ -1,6 +1,6 @@
 using System;
 
-namespace MediSecurity.Models
+namespace WebApplication1.Models
 {
     public class ErrorViewModel
     {
@@ -9,4 +9,3 @@ namespace MediSecurity.Models
         public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
     }
 }
-

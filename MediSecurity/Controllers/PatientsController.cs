@@ -12,17 +12,19 @@ namespace MediSecurity.Controllers
 {
     public class PatientsController : Controller
     {
-        private readonly DataContext _context;
+        private readonly DataContext _dataContext;
 
-        public PatientsController(DataContext context)
+        public PatientsController(DataContext datacontext)
         {
-            _context = context;
+            _dataContext = datacontext;
         }
 
         // GET: Patients
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Patients.ToListAsync());
+            return View( _dataContext.Patients
+                .Include(p=>p.User)
+                .Include(p=>p.MedicalOrders));
         }
 
         // GET: Patients/Details/5
@@ -33,7 +35,7 @@ namespace MediSecurity.Controllers
                 return NotFound();
             }
 
-            var patient = await _context.Patients
+            var patient = await _dataContext.Patients
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (patient == null)
             {
@@ -58,8 +60,8 @@ namespace MediSecurity.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(patient);
-                await _context.SaveChangesAsync();
+                _dataContext.Add(patient);
+                await _dataContext.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(patient);
@@ -73,7 +75,7 @@ namespace MediSecurity.Controllers
                 return NotFound();
             }
 
-            var patient = await _context.Patients.FindAsync(id);
+            var patient = await _dataContext.Patients.FindAsync(id);
             if (patient == null)
             {
                 return NotFound();
@@ -97,8 +99,8 @@ namespace MediSecurity.Controllers
             {
                 try
                 {
-                    _context.Update(patient);
-                    await _context.SaveChangesAsync();
+                    _dataContext.Update(patient);
+                    await _dataContext.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -124,7 +126,7 @@ namespace MediSecurity.Controllers
                 return NotFound();
             }
 
-            var patient = await _context.Patients
+            var patient = await _dataContext.Patients
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (patient == null)
             {
@@ -139,15 +141,15 @@ namespace MediSecurity.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var patient = await _context.Patients.FindAsync(id);
-            _context.Patients.Remove(patient);
-            await _context.SaveChangesAsync();
+            var patient = await _dataContext.Patients.FindAsync(id);
+            _dataContext.Patients.Remove(patient);
+            await _dataContext.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool PatientExists(int id)
         {
-            return _context.Patients.Any(e => e.Id == id);
+            return _dataContext.Patients.Any(e => e.Id == id);
         }
     }
 }

@@ -4,20 +4,55 @@
     ViewData["Title"] = "Index";
 }
 
-<h2>Index</h2>
+<h2>Patients</h2>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn-primary">Create New</a>
 </p>
 <table class="table">
     <thead>
         <tr>
-            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.User.Document)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User.FirstName)
+            <th>
+                @Html.DisplayNameFor(model => model.User.LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User.Address)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User.PhoneNumber)
+            </th>
+
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
+            <th>
+                @Html.DisplayFor(modelItem => item.User.Document)
+            </th>
+            <th>
+                @Html.DisplayFor(modelItem => item.User.FirstName)
+            </th>
+            <th>
+                @Html.DisplayFor(modelItem => item.User.LastName)
+            </th>
+            <th>
+                @Html.DisplayFor(modelItem => item.User.Email)
+            </th>
+            <th>
+                @Html.DisplayFor(modelItem => item.User.Address)
+            </th>
+            <th>
+                @Html.DisplayFor(modelItem => item.User.PhoneNumber)
+            </th>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace MediSecurity.Controllers
 {
+
     public class AccountController : Controller
     {
         private readonly IUserHelper _userHelper;
@@ -40,12 +41,14 @@ namespace MediSecurity.Controllers
 
                     return RedirectToAction("Index", "Home");
                 }
+
+                ModelState.AddModelError(string.Empty, "User or password Incorrect");
             }
 
-            ModelState.AddModelError(string.Empty, "Failed to login.");
             return View(model);
         }
 
+  
         public async Task<IActionResult> Logout()
         {
             await _userHelper.LogoutAsync();

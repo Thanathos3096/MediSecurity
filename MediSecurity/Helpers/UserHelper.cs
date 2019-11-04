@@ -58,6 +58,7 @@ namespace MediSecurity.Helpers
         {
             return await _userManager.IsInRoleAsync(user, roleName);
         }
+
         public async Task<SignInResult> LoginAsync(LoginViewModel model)
         {
             return await _signInManager.PasswordSignInAsync(

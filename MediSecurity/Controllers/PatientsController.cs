@@ -7,16 +7,22 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MediSecurity.Data;
 using MediSecurity.Data.Entities;
+using MediSecurity.Models;
+using MediSecurity.Helpers;
 
 namespace MediSecurity.Controllers
 {
     public class PatientsController : Controller
     {
         private readonly DataContext _dataContext;
+        private readonly IUserHelper _userHelper;
 
-        public PatientsController(DataContext datacontext)
+        public PatientsController(
+            DataContext datacontext,
+            IUserHelper userHelper)
         {
             _dataContext = datacontext;
+            _userHelper = userHelper;
         }
 
         // GET: Patients
@@ -56,15 +62,49 @@ namespace MediSecurity.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id")] Patient patient)
+        public async Task<IActionResult> Create(AddUserViewModel model)
         {
             if (ModelState.IsValid)
             {
-                _dataContext.Add(patient);
-                await _dataContext.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                var user = await CreateUserAsync(model);
+                if(user !=null)
+                {
+                    var patient = new Patient
+                    {
+                        MedicalOrders = new List<MedicalOrder>(),
+                      User=user 
+                      
+                    };
+                    _dataContext.Patients.Add(patient);
+                    await _dataContext.SaveChangesAsync();
+                    return RedirectToAction("Index");
+                }
+                ModelState.AddModelError(string.Empty, "User with this email already exist");
             }
-            return View(patient);
+            return View(model);
+        }
+
+        private async Task<User> CreateUserAsync(AddUserViewModel model)
+        {
+            var user = new User
+            {
+                Address = model.Address,
+                Document = model.Document,
+                Email = model.Username,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                PhoneNumber = model.PhoneNumber,
+                UserName = model.Username
+            };
+
+            var result = await _userHelper.AddUserAsync(user, model.Password);
+            if(result.Succeeded)
+            {
+                user = await _userHelper.GetUserByEmailAsync(model.Username);
+                await _userHelper.AddUserToRoleAsync(user, "Patient");
+                return user;
+            }
+            return null;
         }
 
         // GET: Patients/Edit/5

@@ -7,7 +7,7 @@
 <h2>Patients</h2>
 
 <p>
-    <a asp-action="Create" class="btn-primary">Create New</a>
+    <a asp-action="Create" class="btn btn-primary">Create New</a>
 </p>
 <table class="table">
     <thead>
@@ -35,28 +35,28 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            <th>
-                @Html.DisplayFor(modelItem => item.User.Document)
-            </th>
-            <th>
-                @Html.DisplayFor(modelItem => item.User.FirstName)
-            </th>
-            <th>
-                @Html.DisplayFor(modelItem => item.User.LastName)
-            </th>
-            <th>
-                @Html.DisplayFor(modelItem => item.User.Email)
-            </th>
-            <th>
-                @Html.DisplayFor(modelItem => item.User.Address)
-            </th>
-            <th>
-                @Html.DisplayFor(modelItem => item.User.PhoneNumber)
-            </th>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                @Html.DisplayFor(modelItem => item.User.Document)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.User.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.User.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.User.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.User.Address)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.User.PhoneNumber)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
             </td>
         </tr>
 }

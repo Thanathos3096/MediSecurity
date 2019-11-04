@@ -12,12 +12,12 @@ using MediSecurity.Helpers;
 
 namespace MediSecurity.Controllers
 {
-    public class PatientsController : Controller
+    public class DoctorsController : Controller
     {
         private readonly DataContext _dataContext;
         private readonly IUserHelper _userHelper;
 
-        public PatientsController(
+        public DoctorsController(
             DataContext datacontext,
             IUserHelper userHelper)
         {
@@ -25,15 +25,15 @@ namespace MediSecurity.Controllers
             _userHelper = userHelper;
         }
 
-        // GET: Patients
+        // GET: Doctors
         public IActionResult Index()
         {
-            return View( _dataContext.Patients
-                .Include(p=>p.User)
-                .Include(p=>p.MedicalOrders));
+            return View( _dataContext.Doctors
+                .Include(d=>d.User)
+                .Include(d=>d.MedicalOrders));
         }
 
-        // GET: Patients/Details/5
+        // GET: Doctors/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -41,23 +41,23 @@ namespace MediSecurity.Controllers
                 return NotFound();
             }
 
-            var patient = await _dataContext.Patients
+            var doctor = await _dataContext.Doctors
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (patient == null)
+            if (doctor == null)
             {
                 return NotFound();
             }
 
-            return View(patient);
+            return View(doctor);
         }
 
-        // GET: Patients/Create
+        // GET: Doctors/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Patients/Create
+        // POST: Doctors/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -67,15 +67,15 @@ namespace MediSecurity.Controllers
             if (ModelState.IsValid)
             {
                 var user = await CreateUserAsync(model);
-                if(user !=null)
+                if (user != null)
                 {
-                    var patient = new Patient
+                    var doctor = new Doctor
                     {
-                      MedicalOrders = new List<MedicalOrder>(),
-                      User=user 
-                      
+                        MedicalOrders = new List<MedicalOrder>(),
+                        User = user
+
                     };
-                    _dataContext.Patients.Add(patient);
+                    _dataContext.Doctors.Add(doctor);
                     await _dataContext.SaveChangesAsync();
                     return RedirectToAction("Index");
                 }
@@ -98,7 +98,7 @@ namespace MediSecurity.Controllers
             };
 
             var result = await _userHelper.AddUserAsync(user, model.Password);
-            if(result.Succeeded)
+            if (result.Succeeded)
             {
                 user = await _userHelper.GetUserByEmailAsync(model.Username);
                 await _userHelper.AddUserToRoleAsync(user, "Patient");
@@ -106,8 +106,7 @@ namespace MediSecurity.Controllers
             }
             return null;
         }
-
-        // GET: Patients/Edit/5
+        // GET: Doctors/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -115,22 +114,22 @@ namespace MediSecurity.Controllers
                 return NotFound();
             }
 
-            var patient = await _dataContext.Patients.FindAsync(id);
-            if (patient == null)
+            var doctor = await _dataContext.Doctors.FindAsync(id);
+            if (doctor == null)
             {
                 return NotFound();
             }
-            return View(patient);
+            return View(doctor);
         }
 
-        // POST: Patients/Edit/5
+        // POST: Doctors/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id")] Patient patient)
+        public async Task<IActionResult> Edit(int id, [Bind("Id")] Doctor doctor)
         {
-            if (id != patient.Id)
+            if (id != doctor.Id)
             {
                 return NotFound();
             }
@@ -139,12 +138,12 @@ namespace MediSecurity.Controllers
             {
                 try
                 {
-                    _dataContext.Update(patient);
+                    _dataContext.Update(doctor);
                     await _dataContext.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PatientExists(patient.Id))
+                    if (!DoctorExists(doctor.Id))
                     {
                         return NotFound();
                     }
@@ -155,10 +154,10 @@ namespace MediSecurity.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(patient);
+            return View(doctor);
         }
 
-        // GET: Patients/Delete/5
+        // GET: Doctors/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -166,30 +165,30 @@ namespace MediSecurity.Controllers
                 return NotFound();
             }
 
-            var patient = await _dataContext.Patients
+            var doctor = await _dataContext.Doctors
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (patient == null)
+            if (doctor == null)
             {
                 return NotFound();
             }
 
-            return View(patient);
+            return View(doctor);
         }
 
-        // POST: Patients/Delete/5
+        // POST: Doctors/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var patient = await _dataContext.Patients.FindAsync(id);
-            _dataContext.Patients.Remove(patient);
+            var doctor = await _dataContext.Doctors.FindAsync(id);
+            _dataContext.Doctors.Remove(doctor);
             await _dataContext.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool PatientExists(int id)
+        private bool DoctorExists(int id)
         {
-            return _dataContext.Patients.Any(e => e.Id == id);
+            return _dataContext.Doctors.Any(e => e.Id == id);
         }
     }
 }

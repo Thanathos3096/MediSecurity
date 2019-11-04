@@ -60,10 +60,11 @@ namespace MediSecurity.Data
 
         private async Task CheckHospitalAync()
         {
+            var hospitaltype = _context.HospitalTypes.FirstOrDefault();
             if (!_context.Hospitals.Any())
             {
-                AddHospital("Calle 43 #23 32", "Poblado", "Aqui se cuidan a los enfermos mentales", 4);
-                AddHospital("Calle 43 #23 32", "Poblado", "Aqui se cuidan a las embarazadas", 3);
+                AddHospital("Calle 43 #23 32", "Poblado", "Aqui se cuidan a los enfermos mentales", 4,hospitaltype);
+                AddHospital("Calle 43 #23 32", "Poblado", "Aqui se cuidan a las embarazadas", 3,hospitaltype);
                 await _context.SaveChangesAsync();
             }
         }
@@ -148,12 +149,14 @@ namespace MediSecurity.Data
             string address,
             string neighborhood,
             string remarks,
-            int stratum)
+            int stratum,
+            HospitalType hospitalType)
         {
             _context.Hospitals.Add(new Hospital
             {
                 Address = address,
                 HasParkingLot = true,
+                HospitalType=hospitalType,
                 Neighborhood = neighborhood,
                 Remarks = remarks,
                 Stratum = stratum

@@ -3,10 +3,11 @@ using MediSecurity.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MediSecurity.Controllers
 {
-
+   
     public class AccountController : Controller
     {
         private readonly IUserHelper _userHelper;

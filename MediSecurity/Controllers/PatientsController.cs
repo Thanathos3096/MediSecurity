@@ -9,9 +9,11 @@ using MediSecurity.Data;
 using MediSecurity.Data.Entities;
 using MediSecurity.Models;
 using MediSecurity.Helpers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MediSecurity.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class PatientsController : Controller
     {
         private readonly DataContext _dataContext;

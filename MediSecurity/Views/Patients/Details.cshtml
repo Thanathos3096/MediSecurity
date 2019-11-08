@@ -54,4 +54,51 @@
     <a asp-action="Index" class="btn btn-success">Back to List</a>
 </div>
 
+@if (Model.MedicalOrders.Count == 0)
+{
+    <h5>Not medical orders added yet.</h5>
+}
 
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.MedicalOrders.FirstOrDefault().Remarks)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.MedicalOrders.FirstOrDefault().Price)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.MedicalOrders.FirstOrDefault().StartDate)
+                </th>
+
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.MedicalOrders)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Remarks)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartDate)
+                </td>
+                <td>
+                    <a asp-action="EditMedicalOrder" asp-route-id="@item.Id" class="btn btn-warning">EditMedicalOrder</a> |
+                    <a asp-action="DetailsMedicalOrder" asp-route-id="@item.Id" class="btn btn-info">DetailsMedicalOrder</a> |
+                    <a asp-action="DeleteMedicalOrder" asp-route-id="@item.Id" class="btn btn-danger">DeleteMedicalOrder</a>
+                </td>
+            </tr>
+
+            }
+            }
+        </tbody>
+    </table>
+}

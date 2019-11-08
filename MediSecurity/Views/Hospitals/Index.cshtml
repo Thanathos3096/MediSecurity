@@ -28,7 +28,7 @@
                 @Html.DisplayNameFor(model => model.HasParkingLot)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.HospitalType)
+                @Html.DisplayNameFor(model => model.HospitalType.Name)
             </th>
             <th></th>
         </tr>
@@ -52,7 +52,7 @@
                 @Html.DisplayFor(modelItem => item.HasParkingLot)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.HospitalType)
+                @Html.DisplayFor(modelItem => item.HospitalType.Name)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Edit</a> |

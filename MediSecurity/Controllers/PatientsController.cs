@@ -117,47 +117,48 @@ namespace MediSecurity.Controllers
                 return NotFound();
             }
 
-            var patient = await _dataContext.Patients.FindAsync(id);
+            var patient = await _dataContext.Patients
+                .Include(p => p.User)
+                .FirstOrDefaultAsync(p => p.Id == id.Value);
             if (patient == null)
             {
                 return NotFound();
             }
-            return View(patient);
+
+            var model = new EditUserViewModel
+            {
+                Address = patient.User.Address,
+                Document = patient.User.Document,
+                FirstName = patient.User.FirstName,
+                Id = patient.Id,
+                LastName = patient.User.LastName,
+                PhoneNumber = patient.User.PhoneNumber
+            };
+
+            return View(model);
         }
 
-        // POST: Patients/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id")] Patient patient)
+        public async Task<IActionResult> Edit(EditUserViewModel model)
         {
-            if (id != patient.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _dataContext.Update(patient);
-                    await _dataContext.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!PatientExists(patient.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                var patient = await _dataContext.Patients
+                    .Include(p => p.User)
+                    .FirstOrDefaultAsync(p => p.Id == model.Id);
+
+                patient.User.Document = model.Document;
+                patient.User.FirstName = model.FirstName;
+                patient.User.LastName = model.LastName;
+                patient.User.Address = model.Address;
+                patient.User.PhoneNumber = model.PhoneNumber;
+
+                await _userHelper.UpdateUserAsync(patient.User);
                 return RedirectToAction(nameof(Index));
             }
-            return View(patient);
+
+            return View(model);
         }
 
         // GET: Patients/Delete/5

@@ -22,5 +22,6 @@ namespace MediSecurity.Helpers
         Task<SignInResult> LoginAsync(LoginViewModel model);
 
         Task LogoutAsync();
+        Task<IdentityResult> UpdateUserAsync(User user);
     }
 }

@@ -61,10 +61,11 @@ namespace MediSecurity.Data
         private async Task CheckHospitalAync()
         {
             var hospitaltype = _context.HospitalTypes.FirstOrDefault();
+            var hospitaltype2 = _context.HospitalTypes.LastOrDefault();
             if (!_context.Hospitals.Any())
             {
-                AddHospital("Calle 43 #23 32", "Poblado", "Aqui se cuidan a los enfermos mentales", 4,hospitaltype);
-                AddHospital("Calle 43 #23 32", "Poblado", "Aqui se cuidan a las embarazadas", 3,hospitaltype);
+                AddHospital("Calle 43 #23 32", "Poblado", "Aqui se cuidan a los enfermos mentales", 4,hospitaltype2);
+                AddHospital("Calle 50 #50-50", "San Ignacio", "Aqui se cuidan a las embarazadas", 3,hospitaltype);
                 await _context.SaveChangesAsync();
             }
         }

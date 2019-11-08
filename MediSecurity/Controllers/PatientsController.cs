@@ -44,7 +44,9 @@ namespace MediSecurity.Controllers
             }
 
             var patient = await _dataContext.Patients
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .Include(d => d.User)
+                .Include(d => d.MedicalOrders)
+                .FirstOrDefaultAsync(d => d.Id == id);
             if (patient == null)
             {
                 return NotFound();

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace MediSecurity.Data.Entities
 {
+    
     public class MedicalOrder
     {
         public int Id { get; set; }

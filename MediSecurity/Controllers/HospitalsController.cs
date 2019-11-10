@@ -2,6 +2,7 @@
 using MediSecurity.Data.Entities;
 using MediSecurity.Helpers;
 using MediSecurity.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,17 +13,21 @@ using System.Threading.Tasks;
 
 namespace MediSecurity.Controllers
 {
+    [Authorize(Roles ="Admin")]
     public class HospitalsController : Controller
     {
         private readonly DataContext _dataContext;
         private readonly IUserHelper _userHelper;
+        private readonly IImageHelper _imageHelper;
 
         public HospitalsController(
             DataContext dataContext,
-            IUserHelper userHelper)
+            IUserHelper userHelper,
+            IImageHelper imageHelper)
         {
             _dataContext = dataContext;
             _userHelper = userHelper;
+            _imageHelper = imageHelper;
         }
 
         // GET: Hospitals
@@ -42,7 +47,9 @@ namespace MediSecurity.Controllers
             }
 
             var hospital = await _dataContext.Hospitals
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .Include(h=>h.ImageHospitals)
+                .Include(h=>h.HospitalType)
+                .FirstOrDefaultAsync(h => h.Id == id);
             if (hospital == null)
             {
                 return NotFound();
@@ -157,8 +164,73 @@ namespace MediSecurity.Controllers
         {
             return _dataContext.Hospitals.Any(e => e.Id == id);
         }
+        public async Task<IActionResult> AddImage(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-       
+            var hospital = await _dataContext.Hospitals.FindAsync(id.Value);
+            if (hospital == null)
+            {
+                return NotFound();
+            }
+
+            var model = new ImageHospitalViewModel
+            {
+                Id = hospital.Id
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddImage(ImageHospitalViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var path = string.Empty;
+
+                if (model.ImageFile != null)
+                {
+                    path = await _imageHelper.UploadImageAsync(model.ImageFile);
+                }
+
+                var hospitalImage = new ImageHospital
+                {
+                    ImageUrl = path,
+                    Hospital = await _dataContext.Hospitals.FindAsync(model.Id)
+                };
+
+                _dataContext.ImageHospitals.Add(hospitalImage);
+                await _dataContext.SaveChangesAsync();
+                return RedirectToAction($"{nameof(Details)}/{model.Id}");
+            }
+
+            return View(model);
+        }
+
+        public async Task<IActionResult> DeleteImage(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var hospitalImage = await _dataContext.ImageHospitals
+                .Include(h => h.Hospital)
+                .FirstOrDefaultAsync(h => h.Id == id.Value);
+            if (hospitalImage == null)
+            {
+                return NotFound();
+            }
+
+            _dataContext.ImageHospitals.Remove(hospitalImage);
+            await _dataContext.SaveChangesAsync();
+            return RedirectToAction($"{nameof(Details)}/{hospitalImage.Hospital.Id}");
+        }
+
     }
-    }
+}
 

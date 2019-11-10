@@ -4,45 +4,92 @@
     ViewData["Title"] = "Details";
 }
 
-<h2>Details</h2>
-
+<h2>Hospital</h2>
+<div class="row">
+    <div class="col-md-6">
+        <div>
+            <h4>Details</h4>
+            <hr />
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Neighborhood)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Neighborhood)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Address)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Address)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Remarks)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Remarks)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Stratum)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Stratum)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.HasParkingLot)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.HasParkingLot)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.HospitalType.Name)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.HospitalType.Name)
+                </dd>
+            </dl>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div>
+            <h4>Image Hospital</h4>
+            <hr />
+            <dl class="dl-horizontal">
+                @if (Model.ImageHospitals.Count == 0)
+                {
+                    <h5>Not images added yet.</h5>
+                }
+                else
+                {
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.ImageHospitals.FirstOrDefault().ImageUrl)
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.ImageHospitals)
+                            {
+                                <tr>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                        {
+                                            <img src="@Url.Content(item.ImageUrl)" alt="Image" style="width:200px;height:200px;max-width: 100%; height: auto;" />
+                                        }
+                                    </td>
+                                    <td>
+                                        <a asp-action="DeleteImage" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+        </div>
+    </div>
 <div>
-    <h4>Hospital</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Neighborhood)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Neighborhood)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Address)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Address)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Remarks)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Remarks)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Stratum)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Stratum)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.HasParkingLot)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.HasParkingLot)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="AddImage" asp-route-id="@Model.Id" class="btn btn-primary">Add Image</a>
 </div>

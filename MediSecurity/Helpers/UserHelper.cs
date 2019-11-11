@@ -120,10 +120,6 @@ namespace MediSecurity.Helpers
             return response.Succeeded;
         }
 
-        public async Task<IdentityResult> ChangePasswordAsync(User user, string oldPassword, string newPassword)
-        {
-            return await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
-        }
 
 
         public async Task<IdentityResult> ConfirmEmailAsync(User user, string token)
@@ -150,6 +146,14 @@ namespace MediSecurity.Helpers
         {
             return await _userManager.ResetPasswordAsync(user, token, password);
         }
+        public async Task<SignInResult> ValidatePasswordAsync(User user, string password)
+        {
+            return await _signInManager.CheckPasswordSignInAsync(
+                user,
+                password,
+                false);
+        }
+
 
 
     }

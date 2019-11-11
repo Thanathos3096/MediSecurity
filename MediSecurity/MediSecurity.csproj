@@ -19,4 +19,6 @@
     <ProjectReference Include="..\MediSecurity.Common\MediSecurity.Common.csproj" />
   </ItemGroup>
 
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="http://json.schemastore.org/bowerrc" /></VisualStudio></ProjectExtensions>
+
 </Project>

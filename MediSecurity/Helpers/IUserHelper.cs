@@ -28,8 +28,7 @@ namespace MediSecurity.Helpers
         Task<User> AddUser(AddUserViewModel view, string role);
         Task<IdentityResult> ChangePasswordAsync(User user, string oldPassword, string newPassword);
 
-
-        Task<IdentityResult> ChangePasswordAsync(User user, string oldPassword, string newPassword);
+        Task<SignInResult> ValidatePasswordAsync(User user, string password);
 
         Task<string> GenerateEmailConfirmationTokenAsync(User user);
 

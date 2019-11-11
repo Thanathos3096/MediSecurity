@@ -1,5 +1,7 @@
 ﻿using MediSecurity.Common.Models;
 using MediSecurity.Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -10,6 +12,8 @@ using System.Threading.Tasks;
 namespace MediSecurity.Controllers.API
 {
     [Route("api/[Controller]")]
+    [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class PatientController : ControllerBase
     {
         private readonly DataContext _dataContext;

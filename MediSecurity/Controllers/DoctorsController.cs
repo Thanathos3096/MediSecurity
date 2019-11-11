@@ -9,7 +9,6 @@ using MediSecurity.Data;
 using MediSecurity.Data.Entities;
 using MediSecurity.Models;
 using MediSecurity.Helpers;
-using MyLeasing.Web.Helpers;
 
 namespace MediSecurity.Controllers
 {

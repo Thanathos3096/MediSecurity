@@ -10,7 +10,6 @@ using MediSecurity.Data.Entities;
 using MediSecurity.Models;
 using MediSecurity.Helpers;
 using Microsoft.AspNetCore.Authorization;
-using MyLeasing.Web.Helpers;
 
 namespace MediSecurity.Controllers
 {

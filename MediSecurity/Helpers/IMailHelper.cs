@@ -1,4 +1,4 @@
-﻿namespace MyLeasing.Web.Helpers
+﻿namespace MediSecurity.Helpers
 {
     public interface IMailHelper
     {

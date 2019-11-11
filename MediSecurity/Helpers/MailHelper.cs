@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using MimeKit;
 
-namespace MyLeasing.Web.Helpers
+namespace MediSecurity.Helpers
 {
     public class MailHelper : IMailHelper
     {

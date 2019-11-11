@@ -56,6 +56,7 @@ namespace MediSecurity.Controllers
         // GET: Doctors/Create
         public IActionResult Create()
         {
+            var view = new AddUserViewModel { RoleId = 2 };
             return View();
         }
 

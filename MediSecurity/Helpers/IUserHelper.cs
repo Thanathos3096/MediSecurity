@@ -23,5 +23,8 @@ namespace MediSecurity.Helpers
 
         Task LogoutAsync();
         Task<IdentityResult> UpdateUserAsync(User user);
+
+        Task<User> AddUser(AddUserViewModel view, string role);
+
     }
 }

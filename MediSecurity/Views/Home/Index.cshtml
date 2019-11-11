@@ -71,23 +71,6 @@
 </div>
 
 <hr />
-<div class="row">
-
-    @if (User.IsInRole("Doctor") || User.IsInRole("Admin"))
-    {
-        <div class="col-md-2">
-            <a asp-action="Patients" class="btn btn-success">Patients</a>
-        </div>
-    }
-    @if (User.IsInRole("Patient"))
-    {
-        <div class="col-md-2">
-            <a asp-action="Hospital" class="btn btn-success">Hospital</a>
-        </div>
-    }
-</div>
-
-<hr />
 
 <div class="row">
     <div class="col-md-3">

@@ -30,12 +30,25 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Hospitals" asp-action="Index">Hospital</a></li>
-                    <li><a asp-area="" asp-controller="HospitalTypes" asp-action="Index">HospitalType</a></li>
-                    <li><a asp-area="" asp-controller="Doctors" asp-action="Index">Doctor</a></li>
+
                     @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
                     {
-                    <li><a asp-area="" asp-controller="Patients" asp-action="Index">Patient</a></li>
+                        <li><a asp-area="" asp-controller="Hospitals" asp-action="Index">Hospital</a></li>
+                        <li><a asp-area="" asp-controller="HospitalTypes" asp-action="Index">HospitalType</a></li>
+                        <li><a asp-area="" asp-controller="Doctors" asp-action="Index">Doctor</a></li>
+                        <li><a asp-area="" asp-controller="Patients" asp-action="Index">Patient</a></li>
+                    }
+                    @if (User.Identity.IsAuthenticated && User.IsInRole("Doctor"))
+                    {
+                        <li><a asp-area="" asp-controller="Hospitals" asp-action="Index">Hospital</a></li>
+                        <li><a asp-area="" asp-controller="HospitalTypes" asp-action="Index">HospitalType</a></li>
+                        <li><a asp-area="" asp-controller="Doctors" asp-action="Index">Doctor</a></li>
+                        <li><a asp-area="" asp-controller="Patients" asp-action="Index">Patient</a></li>
+                    }
+                    @if (User.Identity.IsAuthenticated && User.IsInRole("Patient"))
+                    {
+                        <li><a asp-area="" asp-controller="Hospitals" asp-action="Index">Hospital</a></li>
+                        <li><a asp-area="" asp-controller="Patients" asp-action="Index">Patient</a></li>
                     }
                 </ul>
                 <ul class="nav navbar-nav navbar-right">

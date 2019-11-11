@@ -24,7 +24,7 @@ namespace MediSecurity.Data
         {
             await _context.Database.EnsureCreatedAsync();
             await CheckRoles();
-            var admin = await CheckUserAsync("1010", "Pedro", "Zapata", "zapata3096@gmail.com", "350 634 2747", "Calle Luna Calle Sol", "Admin");
+            var admin = await CheckUserAsync("1010", "Mateo", "Zapata", "zapata3096@gmail.com", "350 634 2747", "Calle Luna Calle Sol", "Admin");
             var doctor = await CheckUserAsync("2020", "Juan", "Jaramillo", "jucajama@hotmail.com", "350 634 2747", "Calle Luna Calle Sol", "Doctor");
             var patient = await CheckUserAsync("3030", "Mateo", "Roldan", "mateitoroldan@yahoo.com", "350 634 2747", "Calle Luna Calle Sol", "Patient");
             await CheckHospitalTypeAsync();
@@ -132,6 +132,9 @@ namespace MediSecurity.Data
 
                 await _userHelper.AddUserAsync(user, "123456");
                 await _userHelper.AddUserToRoleAsync(user, role);
+
+                var token = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+                await _userHelper.ConfirmEmailAsync(user, token);
             }
 
             return user;

@@ -16,13 +16,16 @@ namespace MediSecurity.Controllers
     {
         private readonly DataContext _dataContext;
         private readonly IUserHelper _userHelper;
+        private readonly IMailHelper _mailHelper;
 
         public DoctorsController(
             DataContext datacontext,
-            IUserHelper userHelper)
+            IUserHelper userHelper,
+            IMailHelper mailHelper)
         {
             _dataContext = datacontext;
             _userHelper = userHelper;
+            _mailHelper = mailHelper;
         }
 
         // GET: Doctors
@@ -80,6 +83,19 @@ namespace MediSecurity.Controllers
                     };
                     _dataContext.Doctors.Add(doctor);
                     await _dataContext.SaveChangesAsync();
+
+                    var myToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+                    var tokenLink = Url.Action("ConfirmEmail", "Account", new
+                    {
+                        userid = user.Id,
+                        token = myToken
+                    }, protocol: HttpContext.Request.Scheme);
+
+                    _mailHelper.SendMail(model.Username, "MediSegurity - Email confirmation", $"<h1>Email Confirmation</h1>" +
+                    $"To allow the user, " +
+                    $"plase click in this link:</br></br><a href = \"{tokenLink}\">Confirm Email</a>");
+                    ViewBag.Message = "The instructions to allow your user has been sent to email.";
+
                     return RedirectToAction("Index");
                 }
                 ModelState.AddModelError(string.Empty, "User with this email already exist");

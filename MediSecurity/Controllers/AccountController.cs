@@ -15,15 +15,18 @@ namespace MediSecurity.Controllers
         private readonly DataContext _datacontext;
         private readonly IUserHelper _userHelper;
         private readonly ICombosHelper _combosHelper;
+        private readonly IMailHelper _mailHelper;
 
         public AccountController(
             DataContext datacontext,
             IUserHelper userHelper,
-            ICombosHelper combosHelper)
+            ICombosHelper combosHelper,
+            IMailHelper mailHelper)
         {
             _userHelper = userHelper;
             _datacontext = datacontext;
             _combosHelper = combosHelper;
+            _mailHelper = mailHelper;
         }
 
         public IActionResult Login()
@@ -109,23 +112,24 @@ namespace MediSecurity.Controllers
                     };
 
                     _datacontext.Patients.Add(patient);
-                    await _datacontext.SaveChangesAsync();
                 }
-          
 
-                var loginViewModel = new LoginViewModel
+                await _datacontext.SaveChangesAsync();
+
+                var myToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+                var tokenLink = Url.Action("ConfirmEmail", "Account", new
                 {
-                    Password = model.Password,
-                    RememberMe = false,
-                    Username = model.Username
-                };
+                    userid = user.Id,
+                    token = myToken
+                }, protocol: HttpContext.Request.Scheme);
 
-                var result2 = await _userHelper.LoginAsync(loginViewModel);
+                _mailHelper.SendMail(model.Username, "MediSegurity - Email confirmation", $"<h1>Email Confirmation</h1>" +
+                    $"To allow the user, " +
+                    $"plase click in this link:</br></br><a href = \"{tokenLink}\">Confirm Email</a>");
+                ViewBag.Message = "The instructions to allow your user has been sent to email.";
+                return View(model);
 
-                if (result2.Succeeded)
-                {
-                    return RedirectToAction("Index", "Home");
-                }
+
             }
 
             model.Roles = _combosHelper.GetComboRoles();
@@ -140,7 +144,7 @@ namespace MediSecurity.Controllers
                 return NotFound();
             }
 
-            var view = new EditUserViewModel
+            var model = new EditUserViewModel
             {
                 Address = user.Address,
                 Document = user.Document,
@@ -149,29 +153,30 @@ namespace MediSecurity.Controllers
                 PhoneNumber = user.PhoneNumber
             };
 
-            return View(view);
+            return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ChangeUser(EditUserViewModel view)
+        public async Task<IActionResult> ChangeUser(EditUserViewModel model)
         {
             if (ModelState.IsValid)
             {
                 var user = await _userHelper.GetUserByEmailAsync(User.Identity.Name);
 
-                user.Document = view.Document;
-                user.FirstName = view.FirstName;
-                user.LastName = view.LastName;
-                user.Address = view.Address;
-                user.PhoneNumber = view.PhoneNumber;
+                user.Document = model.Document;
+                user.FirstName = model.FirstName;
+                user.LastName = model.LastName;
+                user.Address = model.Address;
+                user.PhoneNumber = model.PhoneNumber;
 
                 await _userHelper.UpdateUserAsync(user);
                 return RedirectToAction("Index", "Home");
             }
 
-            return View(view);
+            return View(model);
         }
+
         public IActionResult ChangePassword()
         {
             return View();
@@ -204,8 +209,89 @@ namespace MediSecurity.Controllers
             return View(model);
         }
 
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        {
+            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
+            {
+                return NotFound();
+            }
+
+            var user = await _userHelper.GetUserByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var result = await _userHelper.ConfirmEmailAsync(user, token);
+            if (!result.Succeeded)
+            {
+                return NotFound();
+            }
+
+            return View();
+        }
+
+        public IActionResult RecoverPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RecoverPassword(RecoverPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userHelper.GetUserByEmailAsync(model.Email);
+                if (user == null)
+                {
+                    ModelState.AddModelError(string.Empty, "The email doesn't correspont to a registered user.");
+                    return View(model);
+                }
+
+                var myToken = await _userHelper.GeneratePasswordResetTokenAsync(user);
+
+                var link = Url.Action(
+                    "ResetPassword",
+                    "Account",
+                    new { token = myToken }, protocol: HttpContext.Request.Scheme);
+
+                _mailHelper.SendMail(model.Email, "MediSegurity Password Reset", $"<h1>MediSegurity Password Reset</h1>" +
+                    $"To reset the password click in this link:</br></br>" +
+                    $"<a href = \"{link}\">Reset Password</a>");
+                ViewBag.Message = "The instructions to recover your password has been sent to email.";
+                return View();
+
+            }
+
+            return View(model);
+        }
+
+        public IActionResult ResetPassword(string token)
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            var user = await _userHelper.GetUserByEmailAsync(model.UserName);
+            if (user != null)
+            {
+                var result = await _userHelper.ResetPasswordAsync(user, model.Token, model.Password);
+                if (result.Succeeded)
+                {
+                    ViewBag.Message = "Password reset successful.";
+                    return View();
+                }
+
+                ViewBag.Message = "Error while resetting the password.";
+                return View(model);
+            }
+
+            ViewBag.Message = "User not found.";
+            return View(model);
+        }
+
 
     }
-
-
 }

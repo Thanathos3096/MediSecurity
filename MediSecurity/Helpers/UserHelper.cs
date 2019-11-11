@@ -104,6 +104,21 @@ namespace MediSecurity.Helpers
             await AddUserToRoleAsync(newUser, role);
             return newUser;
         }
+        public async Task<IdentityResult> ChangePasswordAsync(User user, string oldPassword, string newPassword)
+        {
+            return await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
+        }
+        public async Task<bool> DeleteUserAsync(string email)
+        {
+            var user = await GetUserByEmailAsync(email);
+            if (user == null)
+            {
+                return true;
+            }
+
+            var response = await _userManager.DeleteAsync(user);
+            return response.Succeeded;
+        }
 
     }
 }

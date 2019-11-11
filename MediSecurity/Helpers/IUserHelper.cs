@@ -20,11 +20,14 @@ namespace MediSecurity.Helpers
 
         Task<bool> IsUserInRoleAsync(User user, string roleName);
         Task<SignInResult> LoginAsync(LoginViewModel model);
+        Task<bool> DeleteUserAsync(string email);
 
         Task LogoutAsync();
         Task<IdentityResult> UpdateUserAsync(User user);
 
         Task<User> AddUser(AddUserViewModel view, string role);
+        Task<IdentityResult> ChangePasswordAsync(User user, string oldPassword, string newPassword);
+
 
     }
 }

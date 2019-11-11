@@ -3,6 +3,7 @@ using MediSecurity.Data.Entities;
 using MediSecurity.Helpers;
 using MediSecurity.Models;
 using Microsoft.AspNetCore.Mvc;
+using MyLeasing.Web.Helpers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,15 +16,18 @@ namespace MediSecurity.Controllers
         private readonly DataContext _datacontext;
         private readonly IUserHelper _userHelper;
         private readonly ICombosHelper _combosHelper;
+        private readonly IMailHelper _mailHelper;
 
         public AccountController(
             DataContext datacontext,
             IUserHelper userHelper,
-            ICombosHelper combosHelper)
+            ICombosHelper combosHelper,
+            IMailHelper mailHelper)
         {
             _userHelper = userHelper;
             _datacontext = datacontext;
             _combosHelper = combosHelper;
+            _mailHelper = mailHelper;
         }
 
         public IActionResult Login()
@@ -109,23 +113,24 @@ namespace MediSecurity.Controllers
                     };
 
                     _datacontext.Patients.Add(patient);
-                    await _datacontext.SaveChangesAsync();
                 }
-          
 
-                var loginViewModel = new LoginViewModel
+                await _datacontext.SaveChangesAsync();
+
+                var myToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+                var tokenLink = Url.Action("ConfirmEmail", "Account", new
                 {
-                    Password = model.Password,
-                    RememberMe = false,
-                    Username = model.Username
-                };
+                    userid = user.Id,
+                    token = myToken
+                }, protocol: HttpContext.Request.Scheme);
 
-                var result2 = await _userHelper.LoginAsync(loginViewModel);
+                _mailHelper.SendMail(model.Username, "MediSegurity - Email confirmation", $"<h1>Email Confirmation</h1>" +
+                    $"To allow the user, " +
+                    $"plase click in this link:</br></br><a href = \"{tokenLink}\">Confirm Email</a>");
+                ViewBag.Message = "The instructions to allow your user has been sent to email.";
+                return View(model);
 
-                if (result2.Succeeded)
-                {
-                    return RedirectToAction("Index", "Home");
-                }
+
             }
 
             model.Roles = _combosHelper.GetComboRoles();
@@ -203,6 +208,28 @@ namespace MediSecurity.Controllers
             }
 
             return View(model);
+        }
+
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        {
+            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
+            {
+                return NotFound();
+            }
+
+            var user = await _userHelper.GetUserByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var result = await _userHelper.ConfirmEmailAsync(user, token);
+            if (!result.Succeeded)
+            {
+                return NotFound();
+            }
+
+            return View();
         }
 
     }

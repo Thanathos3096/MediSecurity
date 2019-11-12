@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+
 
 namespace MediSecurity.Common.Models
 {
@@ -10,5 +8,6 @@ namespace MediSecurity.Common.Models
         [Required]
         [EmailAddress]
         public string Email { get; set; }
+
     }
 }

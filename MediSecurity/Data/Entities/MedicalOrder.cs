@@ -34,9 +34,8 @@ namespace MediSecurity.Data.Entities
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = true)]
         public DateTime StartDateLocal => StartDate.ToLocalTime();
 
-
-
         public Doctor Doctor { get; set; }
+
         public Patient Patient { get; set; }
 
         public Hospital Hospital { get; set; }

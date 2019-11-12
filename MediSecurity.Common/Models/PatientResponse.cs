@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.Text;
 
 namespace MediSecurity.Common.Models
 {
@@ -20,6 +20,7 @@ namespace MediSecurity.Common.Models
 
         public string Email { get; set; }
 
-        public ICollection<MedicalOrderResponse> MedicalOrders { get; set; }
+        public ICollection<MedicalOrderResponse> MedicalOrder { get; set; }
+
     }
 }

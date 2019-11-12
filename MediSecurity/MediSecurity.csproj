@@ -15,4 +15,8 @@
     <Folder Include="wwwroot\images\Hospitals\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MediSecurity.Common\MediSecurity.Common.csproj" />
+  </ItemGroup>
+
 </Project>

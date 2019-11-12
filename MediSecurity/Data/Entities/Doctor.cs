@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MediSecurity.Common.Models;
 
 namespace MediSecurity.Data.Entities
 {
@@ -11,5 +12,10 @@ namespace MediSecurity.Data.Entities
         public User User { get; set; }
 
         public ICollection<MedicalOrder> MedicalOrders { get; set; }
+
+        internal DoctorResponse Select(Func<object, DoctorResponse> p)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

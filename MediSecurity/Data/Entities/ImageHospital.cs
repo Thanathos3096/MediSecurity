@@ -15,7 +15,7 @@ namespace MediSecurity.Data.Entities
         // TODO: Change the path when publish
         public string ImageFullPath => string.IsNullOrEmpty(ImageUrl)
             ? null
-            : $"https://myleasing.azurewebsites.net{ImageUrl.Substring(1)}";
+            : $"https://medisecurity.azurewebsites.net{ImageUrl.Substring(1)}";
 
         public Hospital Hospital { get; set; }
     }

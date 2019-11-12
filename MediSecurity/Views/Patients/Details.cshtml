@@ -50,7 +50,6 @@
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
-    <a asp-action="AddMedicalOrder" class="btn btn-primary">Add Medical Order</a>
     <a asp-action="Index" class="btn btn-success">Back to List</a>
 </div>
 
@@ -90,11 +89,7 @@ else
                 <td>
                     @Html.DisplayFor(modelItem => item.StartDate)
                 </td>
-                <td>
-                    <a asp-action="EditMedicalOrder" asp-route-id="@item.Id" class="btn btn-warning">EditMedicalOrder</a> |
-                    <a asp-action="DetailsMedicalOrder" asp-route-id="@item.Id" class="btn btn-info">DetailsMedicalOrder</a> |
-                    <a asp-action="DeleteMedicalOrder" asp-route-id="@item.Id" class="btn btn-danger">DeleteMedicalOrder</a>
-                </td>
+
             </tr>
 
             }

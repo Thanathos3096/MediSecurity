@@ -1,16 +1,13 @@
 ﻿using MediSecurity.Data.Entities;
 using MediSecurity.Models;
 using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MediSecurity.Helpers
 {
     public class UserHelper : IUserHelper
     {
-       
+
 
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
@@ -153,8 +150,5 @@ namespace MediSecurity.Helpers
                 password,
                 false);
         }
-
-
-
     }
 }

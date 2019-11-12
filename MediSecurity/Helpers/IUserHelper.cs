@@ -1,9 +1,6 @@
 ﻿using MediSecurity.Data.Entities;
 using MediSecurity.Models;
 using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MediSecurity.Helpers

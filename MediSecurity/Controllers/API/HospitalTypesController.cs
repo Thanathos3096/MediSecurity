@@ -1,17 +1,16 @@
-﻿using System;
+﻿using MediSecurity.Data;
+using MediSecurity.Data.Entities;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using MediSecurity.Data;
-using MediSecurity.Data.Entities;
 
 namespace MediSecurity.Controllers.Api
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class HospitalTypesController : ControllerBase
     {
         private readonly DataContext _context;

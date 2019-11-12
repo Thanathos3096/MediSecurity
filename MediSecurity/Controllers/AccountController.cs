@@ -70,7 +70,6 @@ namespace MediSecurity.Controllers
             return View(model);
         }
 
-
         public async Task<IActionResult> Logout()
         {
             await _userHelper.LogoutAsync();
@@ -91,7 +90,6 @@ namespace MediSecurity.Controllers
 
             return View(view);
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -116,7 +114,7 @@ namespace MediSecurity.Controllers
                 {
                     var patient = new Patient
                     {
-                       MedicalOrders = new List<MedicalOrder>(),
+                        MedicalOrders = new List<MedicalOrder>(),
                         User = user
                     };
 
@@ -300,6 +298,7 @@ namespace MediSecurity.Controllers
             ViewBag.Message = "User not found.";
             return View(model);
         }
+
         [HttpPost]
         public async Task<IActionResult> CreateToken([FromBody] LoginViewModel model)
         {
@@ -316,9 +315,9 @@ namespace MediSecurity.Controllers
                     {
                         var claims = new[]
                         {
-                    new Claim(JwtRegisteredClaimNames.Sub, user.Email),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-                };
+                            new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+                            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                        };
 
                         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Tokens:Key"]));
                         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -339,6 +338,7 @@ namespace MediSecurity.Controllers
                 }
             }
 
-
+            return BadRequest();
         }
     }
+}
